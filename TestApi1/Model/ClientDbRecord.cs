@@ -4,6 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace TestApi1.Model
 {
+    /// <summary>
+    /// A database record describing Clients
+    /// </summary>
     [Table("Clients")]
     public record ClientDbRecord
     {

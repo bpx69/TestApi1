@@ -8,6 +8,9 @@ using TestApi1.Authentication;
 
 namespace TestApi1UnitTests
 {
+    /// <summary>
+    /// Middleware simulator used in tests to be able to test the API
+    /// </summary>
     public class TestKeyVerifier
     {
         private readonly IApiKeyValidation _validator;

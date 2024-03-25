@@ -5,8 +5,12 @@ using System.Reflection;
 
 namespace TestApi1.Authentication
 {
+    /// <summary>
+    /// Binds the SwaggerHeaderAttributes to Swagger API Description
+    /// </summary>
     public class SwaggerHeaderFilter : IOperationFilter
     {
+        
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             operation.Parameters ??= new List<OpenApiParameter>();

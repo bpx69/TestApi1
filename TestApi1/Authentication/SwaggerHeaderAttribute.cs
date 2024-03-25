@@ -1,5 +1,8 @@
 ﻿namespace TestApi1.Authentication
 {
+    /// <summary>
+    /// Adds the Headers Key Attribute to Swagger API Description
+    /// </summary>
     public class SwaggerHeaderAttribute : Attribute
     {
         public string HeaderName { get; }

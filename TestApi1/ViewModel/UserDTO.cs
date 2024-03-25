@@ -5,7 +5,7 @@ namespace TestApi1.ViewModel
 {
 
     /// <summary>
-    /// a Record used in the data transfer to the API Client
+    /// a Record used in the data transfer to the API Client. No password there.
     /// </summary>
     public class UserDTO
     {
@@ -80,6 +80,21 @@ namespace TestApi1.ViewModel
             if (this.Language == null && obj != null || !this.Language!.Equals(((obj as UserDTO)?.Language))) return false;
             if (this.Culture == null &&  obj != null || !this.Culture!.Equals(((obj as UserDTO)?.Culture))) return false;
             return true;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 0;
+            unchecked {
+                if (Id != null) hash = hash * 23 + Id.GetHashCode();
+                if (UserName != null) hash = hash * 17 + UserName.GetHashCode();
+                if (FullName != null) hash = hash * 13 + FullName.GetHashCode();
+                if (EMail != null) hash = hash * 11 + EMail.GetHashCode();
+                if (MobilePhoneNumber != null) hash = hash * 7 + MobilePhoneNumber.GetHashCode();
+                if (Language != null) hash = hash * 5 + Language.GetHashCode();
+                if (Culture != null) hash = hash * 3 + Culture.GetHashCode();
+            }
+            return hash;
         }
     }
 }

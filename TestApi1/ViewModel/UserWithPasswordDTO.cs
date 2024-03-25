@@ -1,5 +1,8 @@
 ﻿namespace TestApi1.ViewModel
 {
+    /// <summary>
+    /// DTO to transfer User Data from Client to API. Contains plain text password (over HTTPS)
+    /// </summary>
     public class UserWithPasswordDTO : UserDTO
     {
         public string Password { get; set; }

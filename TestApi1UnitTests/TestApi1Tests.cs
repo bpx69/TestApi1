@@ -19,6 +19,9 @@ using TestApi1.ViewModel;
 
 namespace TestApi1UnitTests
 {
+    /// <summary>
+    /// A very minimal set of tests to mock test TestApi1
+    /// </summary>
     [TestClass]
     public class TestApi1Tests
     {
@@ -194,6 +197,7 @@ namespace TestApi1UnitTests
             UserDbRecord? updatedRecord = null;
 
             _context.Setup(x => x.SetAsModified(Moq.It.IsAny<UserDbRecord>())).Callback<UserDbRecord>(r => updatedRecord = r);
+            // EntityFramework Moq does unfortunately not implement Find and FindAsync
             _context.Setup(x => x.Users.FindAsync(Moq.It.IsAny<Guid>())).Returns(ValueTask.FromResult<UserDbRecord>(rec1)!);
 
             await _middleware.InvokeAsync(_httpContext);

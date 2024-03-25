@@ -1,5 +1,12 @@
 ﻿namespace TestApi1.Authentication
 {
+    /// <summary>
+    /// Middleware checking the HTTPRequestHeaders for header named in Constants.ApiKeyHeaderName
+    /// and then using ApiKeyValidation to check if the key is valid.
+    /// Adds ClientId and ClientName to headers named in Constants.ApiClientIdHederName, Constants.ApiClientHederName
+    /// 
+    /// If it fails to find API Key, returns a BadRequest Response Code
+    /// </summary>
     public class ApiKeyVerifier
     {
         private readonly RequestDelegate _next;

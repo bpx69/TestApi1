@@ -2,6 +2,9 @@
 
 namespace TestApi1.Authentication
 {
+    /// <summary>
+    /// Transient Service performing API Key Validation
+    /// </summary>
     public class ApiKeyValidation : IApiKeyValidation
     {
         private readonly UserAPIDbContext _context;
@@ -11,6 +14,14 @@ namespace TestApi1.Authentication
             _context = context;
             _cache = new Dictionary<string, ClientDbRecord>();
         }
+
+        /// <summary>
+        /// Checks if API Key is valid
+        /// </summary>
+        /// <param name="userApiKey"></param>
+        /// <param name="clientGuid"></param>
+        /// <param name="clientName"></param>
+        /// <returns></returns>
         public bool IsValidApiKey(string userApiKey, out Guid? clientGuid, out string? clientName)
         {
 

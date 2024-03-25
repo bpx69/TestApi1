@@ -8,6 +8,9 @@ using TestApi1.Authentication;
 
 namespace TestApi1.Logging
 {
+    /// <summary>
+    /// Class providing API Logging functions
+    /// </summary>
     public class ApiLogger
     {
         ILogger _logger;

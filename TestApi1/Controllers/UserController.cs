@@ -27,6 +27,10 @@ using Microsoft.Data.SqlClient;
 
 namespace TestApi1.Controllers
 {
+    /// <summary>
+    /// API Controller implementing the complete User API
+    /// Because of simplicity not special Business Logic layer has been created
+    /// </summary>
     [Route("api/User")]
     [ApiController]
     public class UserController : ControllerBase
@@ -40,6 +44,12 @@ namespace TestApi1.Controllers
         HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
 
 
+        /// <summary>
+        /// Not API Function, used in tests to create test password hashes and therefore public.
+        /// </summary>
+        /// <param name="saltGuid"></param>
+        /// <param name="plainTextPassword"></param>
+        /// <returns>password hash to be stored for password comparisons</returns>
         [ApiExplorerSettings(IgnoreApi = true)]
         public string GetPasswordHash(Guid saltGuid, string plainTextPassword)
         {
@@ -54,6 +64,13 @@ namespace TestApi1.Controllers
             return Convert.ToBase64String(hash);
         }
 
+        /// <summary>
+        /// Compares plain text password with stored password hash
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="hash"></param>
+        /// <param name="saltGuid"></param>
+        /// <returns>true if passwords match, false if not</returns>
         bool VerifyPassword(string password, string hash, Guid saltGuid)
         {
             var salt = saltGuid.ToByteArray();
@@ -61,11 +78,24 @@ namespace TestApi1.Controllers
             return CryptographicOperations.FixedTimeEquals(hashToCompare, Convert.FromBase64String(hash));
         }
 
+        /// <summary>
+        /// Password comparison has non trivial execution time and it can be run asynchronously in a task
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="hash"></param>
+        /// <param name="saltGuid"></param>
+        /// <returns>Task returning a bool. See synchronous function for semantics.</returns>
         protected Task<bool> VerifyPasswordAsync(string password, string hash, Guid saltGuid)
         {
             return Task.Run<bool>(() => VerifyPassword(password, hash, saltGuid));
         }
 
+        /// <summary>
+        /// Creates a UserDbRecord from user DTO 
+        /// </summary>
+        /// <param name="userData"></param>
+        /// <param name="userRecord"></param>
+        /// <returns>true if ok, false if inconsistent or missing data</returns>
         protected bool ValidateAndPrepareData(UserWithPasswordDTO userData, out UserDbRecord? userRecord)
         {
             
@@ -104,6 +134,10 @@ namespace TestApi1.Controllers
             _logger = new ApiLogger(logger, "User");
         }
 
+        /// <summary>
+        /// Debugging function, 
+        /// </summary>
+        /// <returns>list of all Users of a Client</returns>
         // GET: api/User
         [HttpGet]
         [SwaggerOperation(Summary = "Get a specific user by ID")]
@@ -125,6 +159,10 @@ namespace TestApi1.Controllers
             return _logger.LogExit<IEnumerable<UserDTO>>(result);
         }
 
+        /// <summary>
+        /// API Function, Retrieve a specific User 
+        /// </summary>
+        /// <returns>a DTO containing specific user data if found, the below responses if problems</returns>
         // GET: api/User/5
         [HttpGet("{id}")]
         [SwaggerOperation(Summary = "Get a specific user by ID")]
@@ -144,7 +182,12 @@ namespace TestApi1.Controllers
  
             return Ok(_logger.LogOk<UserDTO>(new UserDTO(userDbRecord)));
         }
-
+        /// <summary>
+        /// Updates a user record in the database
+        /// </summary>
+        /// <param name="id">id of the record</param>
+        /// <param name="userData">new user data DTO</param>
+        /// <returns>a DTO containing specific user data  or below responses on error</returns>
         // PUT: api/User/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -187,6 +230,11 @@ namespace TestApi1.Controllers
             return Ok(_logger.LogOk(new UserDTO(user)));
         }
 
+        /// <summary>
+        /// Creates a new user record in a database
+        /// </summary>
+        /// <param name="userData">DTO containing user data</param>
+        /// <returns>DTO with the created user data on success, below responses on errors</returns>
         // POST: api/User
         [HttpPost]
         [SwaggerOperation(Summary = "Create a new user record")]
@@ -222,6 +270,11 @@ namespace TestApi1.Controllers
             return Ok(_logger.LogOk(new UserDTO((createdAtActionResult.Value as UserDbRecord)!)));
         }
 
+        /// <summary>
+        /// Deletes a user record from database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>See below for list of responses</returns>
         // DELETE: api/User/5
         [HttpDelete("{id}")]
         [SwaggerOperation(Summary = "Delete the existing user data")]
@@ -246,6 +299,11 @@ namespace TestApi1.Controllers
             return _logger.LogExit(NoContent());
         }
 
+        /// <summary>
+        /// Gets the User DTO stored in database from username and plain text password
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost("VerifyPassword")]
         [SwaggerOperation(Summary = "Verify if UserName and password match any stored record (and client)")]
         [SwaggerHeader(Constants.ApiKeyHeaderName, "API Key of Client")]
